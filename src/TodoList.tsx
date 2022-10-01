@@ -1,36 +1,69 @@
-import React from 'react';
+import React, {ChangeEvent, useState} from "react";
+import {FilterValueType} from "./App";
 
-type TodoListPropsType = {
-    title: string,
-    tasks: Array<TaskType>
+export type TodoListPropsType = {
+	title: string,
+	tasks: Array<TaskType>
+	addTasks: (e: string) => void
+	removeTasks: (taskId: string) => void
+	changeTasks: (task: FilterValueType) => void
 }
 
-type TaskType = {
-    id: number
-    title: string
-    isDone: boolean
+export type TaskType = {
+	id: string
+	title: string
+	isDone: boolean
 }
 
-const TodoList = (props:TodoListPropsType) => {
-    return (
-        <div>
-            <h3>{props.title}</h3>
-            <div>
-                <input/>
-                <button>+</button>
-            </div>
-            <ul>
-                <li><input type="checkbox" checked={props.tasks[0].isDone}/> <span>{props.tasks[0].title}</span></li>
-                <li><input type="checkbox" checked={props.tasks[1].isDone}/> <span>{props.tasks[1].title}</span></li>
-                <li><input type="checkbox" checked={props.tasks[2].isDone}/> <span>{props.tasks[2].title}</span></li>
-            </ul>
-            <div>
-                <button>All</button>
-                <button>Active</button>
-                <button>Completed</button>
-            </div>
-        </div>
-    );
+const TodoList = (props: TodoListPropsType) => {
+	const [inputText, setInputText] = useState("")
+	const AddTask = () => {
+		props.addTasks(inputText);
+		setInputText("");
+	}
+	const ChangeInputText = (e: ChangeEvent<HTMLInputElement>) => {
+		setInputText(e.currentTarget.value)
+	}
+	const OnKeyPressHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === "Enter") {
+			props.addTasks(inputText);
+			setInputText("");
+		}
+	}
+	const ChangeTaskType = (e:any) => {
+		let ButtonValue = (e._dispatchInstances.memoizedProps.children)
+		props.changeTasks(ButtonValue)
+	}
+	const TasksList = props.tasks.map((el) => {
+		const RemoveTask = () => props.removeTasks(el.id)
+		return (
+			<>
+				<li key={el.id}>
+					<input type="checkbox" checked={el.isDone}/> <span>{el.title}</span>
+					<button onClick={RemoveTask}>X</button>
+				</li>
+
+			</>
+		)
+	})
+	return (
+		<div>
+			<h3>{props.title}</h3>
+			<div>
+				<input value={inputText}  onChange={ChangeInputText} onKeyDown={(e) => OnKeyPressHandler(e)}/>
+				<button onClick={AddTask}>+
+				</button>
+			</div>
+			<ul>
+				{TasksList}
+			</ul>
+			<div>
+				<button onClick={ChangeTaskType}>All</button>
+				<button onClick={ChangeTaskType}>Active</button>
+				<button onClick={ChangeTaskType}>Completed</button>
+			</div>
+		</div>
+	);
 };
 
 export default TodoList;
