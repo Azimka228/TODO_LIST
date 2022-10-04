@@ -4,6 +4,7 @@ import TodoList from "./TodoList";
 import {v1} from "uuid";
 
 export type FilterValueType = "All" | "Completed" | "Active"
+
 function App() {
 	const todoListTitle = "What to buy"
 	const [Tasks, setTasks] = useState([
@@ -11,30 +12,39 @@ function App() {
 		{id: v1(), title: "JS", isDone: true},
 		{id: v1(), title: "React", isDone: false},
 	])
-	const addTasks = (e:string) => {
-		let Task = {id: v1(), title:e, isDone: false}
+
+	const addTasks = (e: string) => {
+		let Task = {id: v1(), title: e.trim(), isDone: false}
 		let NewTasks = [Task, ...Tasks]
 		setTasks(NewTasks)
 	}
-	const removeTasks = (taskId:string) => {
-		setTasks(Tasks.filter((t) => { return t.id !== taskId}))
+	const removeTasks = (taskId: string) => {
+		setTasks(Tasks.filter((t) => {
+			return t.id !== taskId
+		}))
 	}
-	const [Filter,setFilter] = useState<FilterValueType>("All")
-	const changeTasks = (ch_task : FilterValueType) => {
+	const [Filter, setFilter] = useState<FilterValueType>("All")
+	const chooseTasks = (ch_task: FilterValueType) => {
 		setFilter(ch_task)
 	}
-	let TaskaForTodoList = Tasks
+	const ChangeTaskStatus = (taskId: string, isDone: boolean) => {
+		const UpdatedTasks = Tasks.map(t => t.id === taskId ? {...t, isDone} : t)
+		setTasks(UpdatedTasks)
+	}
+	let TaskForTodoList = Tasks
 	if (Filter === "Completed") {
-		TaskaForTodoList = Tasks.filter(t => t.isDone)
+		TaskForTodoList = Tasks.filter(t => t.isDone)
 	}
 	if (Filter === "Active") {
-		TaskaForTodoList = Tasks.filter(t => !t.isDone)
+		TaskForTodoList = Tasks.filter(t => !t.isDone)
 	}
 
 	return (
 		<div className="App">
-			<TodoList tasks={TaskaForTodoList} title={todoListTitle} removeTasks={removeTasks}
-					  changeTasks={changeTasks} addTasks={addTasks}/>
+			<TodoList tasks={TaskForTodoList} title={todoListTitle} removeTasks={removeTasks}
+					  chooseTasks={chooseTasks} addTasks={addTasks} ChangeTaskStatus={ChangeTaskStatus}
+					  Filter={Filter}
+			/>
 		</div>
 	);
 }
