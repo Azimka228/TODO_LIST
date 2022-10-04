@@ -41,6 +41,9 @@ const TodoList = (props: TodoListPropsType) => {
 			AddTask()
 		}
 	}
+	const OnblurInput = () => {
+		setError(false)
+	}
 	const ChangeTaskType = (e: any) => {
 		let ButtonValue = (e._dispatchInstances.memoizedProps.children)
 		props.chooseTasks(ButtonValue)
@@ -70,8 +73,8 @@ const TodoList = (props: TodoListPropsType) => {
 			<h3>{props.title}</h3>
 			<div>
 				<input className={error ? "error" : ""} value={inputText} onChange={ChangeInputText}
-					   onKeyDown={(e) => OnKeyPressHandler(e)}/>
-				<button onClick={AddTask}>+
+					   onKeyDown={(e) => OnKeyPressHandler(e)} onBlur={OnblurInput}/>
+				<button onClick={AddTask} onBlur={OnblurInput} >+
 				</button>
 			</div>
 			{error && <div className="error_text">field is required</div>}
