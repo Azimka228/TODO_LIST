@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import "./App.css";
 import TodoList, {TaskType} from "./TodoList";
 import {v1} from "uuid";
+import InputForAddItem from "./Components/InputForAddItem/InputForAddItem";
 
 export type FilterValueType = "All" | "Completed" | "Active"
 export type TodoListsType = {
@@ -10,7 +11,7 @@ export type TodoListsType = {
 	filter: FilterValueType
 }
 type TaskStateType = {
-	[key:string]:Array<TaskType>
+	[key: string]: Array<TaskType>
 }
 
 function App() {
@@ -57,17 +58,42 @@ function App() {
 		}
 
 	}
+
 	const ChangeTaskStatus = (taskId: string, isDone: boolean, todoListId: string) => {
-		Tasks[todoListId] = Tasks[todoListId].map(t => t.id === taskId ? {...t, isDone} : t)
+		Tasks[todoListId] = Tasks[todoListId].map(t => t.id === taskId ? {...t, isDone: !isDone} : t)
 		setTasks({...Tasks})
 	}
+
+	const RenameTask = (taskId: string, value: string, todoListId: string) => {
+		Tasks[todoListId] = Tasks[todoListId].map(t => t.id === taskId ? {...t, title:value} : t)
+		setTasks({...Tasks})
+	}
+
+	const RenameTodoListTitle = (value: string, todoListId: string) => {
+		todoLists.map(el => el.id === todoListId? el.title = value: el.title )
+		setTodoLists([...todoLists])
+	}
+
 	const DeleteTodoList = (todoListId: string) => {
 		setTodoLists(todoLists.filter(td => td.id !== todoListId))
 		delete Tasks[todoListId]
 		setTasks({...Tasks})
 	}
+	const addNewTodoList = (ItemValue: string) => {
+		let idForTodoList = v1()
+		let newTodoList:TodoListsType = {"id": idForTodoList,
+				title: ItemValue,
+				filter: "All",
+			}
+
+		setTodoLists([newTodoList,...todoLists])
+		setTasks({...Tasks,[idForTodoList]:[]})
+	}
 	return (
 		<div className="App">
+			<div>
+				<InputForAddItem onAddItemCallBack={addNewTodoList}/>
+			</div>
 			{
 				todoLists.map(todolist => {
 					let TaskForTodoList = Tasks[todolist.id]
@@ -87,6 +113,8 @@ function App() {
 						chooseTasks={chooseTasks}
 						addTasks={addTasks}
 						ChangeTaskStatus={ChangeTaskStatus}
+						RenameTask={RenameTask}
+						RenameTodoListTitle={RenameTodoListTitle}
 						Filter={todolist.filter}
 					/>
 				})
