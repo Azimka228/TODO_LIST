@@ -1,7 +1,10 @@
 import React, {ChangeEvent, useState} from "react";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import {AddBox} from "@mui/icons-material";
 
 type EditableInputProps = {
-	onAddItemCallBack: (ItemValue:string) => void
+	onAddItemCallBack: (ItemValue: string) => void
 }
 
 const InputForAddItem: React.FC<EditableInputProps> = ({onAddItemCallBack}) => {
@@ -21,7 +24,7 @@ const InputForAddItem: React.FC<EditableInputProps> = ({onAddItemCallBack}) => {
 			onClickHandler()
 		}
 	}
-	const onClickHandler = ()=> {
+	const onClickHandler = () => {
 		let trimStr = inputText.trim()
 		if (trimStr !== "") {
 			onAddItemCallBack(trimStr)
@@ -35,12 +38,22 @@ const InputForAddItem: React.FC<EditableInputProps> = ({onAddItemCallBack}) => {
 	return (
 		<>
 			<div>
-				<input className={error ? "error" : ""} value={inputText} onChange={ChangeInputText}
-											onKeyDown={OnKeyPressHandler} onBlur={OnblurInput}/>
-				<button onClick={onClickHandler}  onBlur={OnblurInput} >+
-				</button>
+				<TextField variant="outlined"
+															error={error}
+															label="Text"
+															helperText={error? "Field is required" : ""}
+															value={inputText}
+															onChange={ChangeInputText}
+															onKeyDown={OnKeyPressHandler}
+															onBlur={OnblurInput}/>
+				<IconButton
+												color="primary"
+												onClick={onClickHandler}
+												onBlur={OnblurInput}>
+					<AddBox/>
+				</IconButton>
 			</div>
-			{error && <div className="error_text">field is required</div>}
+
 		</>
 	);
 };
