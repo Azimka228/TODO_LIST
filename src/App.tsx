@@ -13,7 +13,7 @@ export type TodoListsType = {
 	title: string
 	filter: FilterValueType
 }
-type TaskStateType = {
+export type TaskStateType = {
 	[key: string]: Array<TaskType>
 }
 
@@ -48,7 +48,7 @@ function App() {
 		Tasks[todoListId] = [Task, ...tasks]
 		setTasks({...Tasks})
 	}
-	const removeTasks = (taskId: string, todoListId: string) => {
+	const removeTasks = (taskId: string, todoListId: string) =>{
 		let tasks = Tasks[todoListId]
 		Tasks[todoListId] = tasks.filter(el => el.id !== taskId)
 		setTasks({...Tasks})
@@ -61,7 +61,6 @@ function App() {
 		}
 
 	}
-
 	const ChangeTaskStatus = (taskId: string, isDone: boolean, todoListId: string) => {
 		Tasks[todoListId] = Tasks[todoListId].map(t => t.id === taskId ? {...t, isDone: !isDone} : t)
 		setTasks({...Tasks})
@@ -71,12 +70,10 @@ function App() {
 		Tasks[todoListId] = Tasks[todoListId].map(t => t.id === taskId ? {...t, title: value} : t)
 		setTasks({...Tasks})
 	}
-
 	const RenameTodoListTitle = (value: string, todoListId: string) => {
 		todoLists.map(el => el.id === todoListId ? el.title = value : el.title)
 		setTodoLists([...todoLists])
 	}
-
 	const DeleteTodoList = (todoListId: string) => {
 		setTodoLists(todoLists.filter(td => td.id !== todoListId))
 		delete Tasks[todoListId]
@@ -93,6 +90,7 @@ function App() {
 		setTodoLists([newTodoList, ...todoLists])
 		setTasks({...Tasks, [idForTodoList]: []})
 	}
+
 	return (
 		<div className="App">
 			<Box sx={{flexGrow: 1}}>
