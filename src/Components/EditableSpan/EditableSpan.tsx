@@ -1,4 +1,5 @@
 import React, {ChangeEventHandler, MouseEventHandler, useState} from "react";
+import TextField from "@mui/material/TextField";
 
 type EditableSpanProps = {
 	title: string
@@ -28,7 +29,7 @@ const EditableSpan: React.FC<EditableSpanProps> = ({title,onRenameCallBack}) => 
 	return (
 		<>
 			{editMode ?
-				<input type="text"
+				<TextField type="text"
 											onBlur={onBlurHandler}
 											onKeyDown={OnKeyPressHandler}
 											value={inputValue} autoFocus
