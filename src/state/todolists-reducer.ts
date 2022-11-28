@@ -1,4 +1,4 @@
-import {FilterValueType, TodoListsType} from "../App";
+import {FilterValueType, TodoListsType} from "../AppWithReducer";
 import {v1} from "uuid";
 
 export type RemoveTodoListActionType = {
@@ -30,7 +30,12 @@ type ActionsType =
 	| ChangeTodoListTitleActionType
 	| ChangeTodoListFilterActionType
 
-export const todolistsReducer = (state: Array<TodoListsType>, action: ActionsType): Array<TodoListsType> => {
+const initialState:Array<TodoListsType> = [
+	{id: "todoListId1", title: "What to buy", filter: "All"},
+	{id: "todoListId2", title: "What to Learn", filter: "All"}
+]
+
+export const todolistsReducer = (state: Array<TodoListsType> = initialState, action: ActionsType): Array<TodoListsType> => {
 	switch (action.type) {
 		case "ADD-TODOLIST" : {
 			return [
@@ -56,7 +61,7 @@ export const todolistsReducer = (state: Array<TodoListsType>, action: ActionsTyp
 			return [...state]
 		}
 		default: {
-			throw new Error("Action type is not valid")
+			return state
 		}
 	}
 }

@@ -1,4 +1,4 @@
-import {TaskStateType} from "../App";
+import {TaskStateType} from "../AppWithReducer";
 import {v1} from "uuid";
 import {RemoveTodoListActionType} from "./todolists-reducer";
 
@@ -43,7 +43,24 @@ export type addTodolistActionType = {
 
 type ActionsType = removeTaskActionType | addTaskActionType | changeTaskStatusActionType | changeTaskTitleActionType | addTodolistActionType | RemoveTodoListActionType
 
-export const tasksReducer = (state: TaskStateType, action: ActionsType): TaskStateType => {
+const initialState = {
+	["todoListId1"]: [
+		{id: v1(), title: "HTML&CSS", isDone: true},
+		{id: v1(), title: "JS", isDone: true},
+		{id: v1(), title: "ReactJS", isDone: false},
+
+	],
+	["todoListId2"]: [
+		{id: v1(), title: "Cola", isDone: true},
+		{id: v1(), title: "Milk", isDone: false},
+		{id: v1(), title: "Cheaps", isDone: false},
+
+	],
+
+}
+
+export const tasksReducer = (state: TaskStateType = initialState, action: ActionsType): TaskStateType => {
+	debugger
 	switch (action.type) {
 		case REMOVE_TASK : {
 			let copyState = {
@@ -111,7 +128,7 @@ export const tasksReducer = (state: TaskStateType, action: ActionsType): TaskSta
 			return {...copyState}
 		}
 		default: {
-			throw new Error("Action type is not valid")
+			return state
 		}
 	}
 }
@@ -125,6 +142,7 @@ export const addTaskAC = (title: string, todolistId: string): addTaskActionType 
 }
 
 export const changeTaskStatusAC = (taskId: string, isDone: boolean, todolistId: string): changeTaskStatusActionType => {
+
 	return {type: CHANGE_TASK_STATUS, taskId: taskId, isDone: isDone, todolistId: todolistId}
 }
 
