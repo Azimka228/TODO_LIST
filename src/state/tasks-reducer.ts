@@ -7,7 +7,6 @@ const ADD_TASK = "ADD-TASK"
 const CHANGE_TASK_STATUS = "CHANGE-TASK-STATUS"
 const CHANGE_TASK_TITLE = "CHANGE-TASK-TITLE"
 const ADD_TODOLIST = "ADD-TODOLIST"
-const REMOVE_TODOLIST = "ADD-TODOLIST"
 
 export type removeTaskActionType = {
 	type: "REMOVE-TASK"
@@ -60,7 +59,6 @@ const initialState = {
 }
 
 export const tasksReducer = (state: TaskStateType = initialState, action: ActionsType): TaskStateType => {
-	debugger
 	switch (action.type) {
 		case REMOVE_TASK : {
 			let copyState = {

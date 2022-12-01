@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useCallback} from "react";
 import "./App.css";
 import TodoList, {TaskType} from "./TodoList";
 import InputForAddItem from "./Components/InputForAddItem/InputForAddItem";
@@ -19,25 +19,27 @@ export type TaskStateType = {
 	[key: string]: Array<TaskType>
 }
 
-function AppWithReducer() {
+const AppWithReducer =  () => {
+
+	console.log("App rendered")
 
 	const dispatch = useDispatch()
 
 	const todoLists = useSelector<AppRootState, Array<TodoListsType>>(state => state.todolists)
 
 
-	const RenameTodoListTitle = (value: string, todoListId: string) => {
+	const RenameTodoListTitle = useCallback((value: string, todoListId: string) => {
 		const action = ChangeTodoListTitleAC(value,todoListId)
 		dispatch(action)
-	}
-	const DeleteTodoList = (todoListId: string) => {
+	},[])
+	const DeleteTodoList =  useCallback ( (todoListId: string) => {
 		const action = RemoveTodoListAC(todoListId)
 		dispatch(action)
-	}
-	const addNewTodoList = (ItemValue: string) => {
+	},[])
+	const addNewTodoList = useCallback ((ItemValue: string) => {
 		const action = AddTodoListAC(ItemValue)
 		dispatch(action)
-	}
+	},[])
 
 	return (
 		<div className="App">

@@ -6,7 +6,7 @@ type EditableSpanProps = {
 	onRenameCallBack: (value: string) => void
 }
 
-const EditableSpan: React.FC<EditableSpanProps> = ({title,onRenameCallBack}) => {
+const EditableSpan: React.FC<EditableSpanProps> = React.memo (({title,onRenameCallBack}) => {
 	const [editMode, setEditMode] = useState(false)
 	const [inputValue, setInputValue] = useState(title)
 
@@ -40,6 +40,6 @@ const EditableSpan: React.FC<EditableSpanProps> = ({title,onRenameCallBack}) => 
 				>{title}</span>}
 		</>
 	);
-};
+})
 
 export default EditableSpan;

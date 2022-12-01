@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useCallback} from "react";
 import {FilterValueType} from "./App";
 import "./App.css";
 import InputForAddItem from "./Components/InputForAddItem/InputForAddItem";
@@ -31,8 +31,9 @@ export type TaskType = {
 	isDone: boolean
 }
 
-const TodoList = (props: TodoListPropsType) => {
+const TodoList = React.memo( (props: TodoListPropsType) => {
 
+	console.log("TodoList rendered")
 	const tasks = useSelector<AppRootState, Array<TaskType>>(state => state.tasks[props.id])
 	const dispatch = useDispatch()
 
@@ -58,7 +59,6 @@ const TodoList = (props: TodoListPropsType) => {
 		const RemoveTask = () => dispatch(removeTaskAC(el.id, props.id))
 
 		const ChangeTaskStatusHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-
 			dispatch(changeTaskStatusAC(el.id, e.currentTarget.checked, props.id))
 		}
 		const RenameTaskHandler = (value: string) => {
@@ -103,7 +103,7 @@ const TodoList = (props: TodoListPropsType) => {
 				<Button
 					variant={props.Filter === "Active" ? "outlined" : "text"}
 					color="secondary"
-					onClick={() => ChangeTaskType("Active")}>Active
+					onClick={() =>  ChangeTaskType("Active")}>Active
 				</Button>
 				<Button
 					variant={props.Filter === "Completed" ? "outlined" : "text"}
@@ -112,7 +112,7 @@ const TodoList = (props: TodoListPropsType) => {
 				</Button>
 			</div>
 		</div>
-	);
-};
+	)
+})
 
 export default TodoList;

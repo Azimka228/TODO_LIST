@@ -7,7 +7,7 @@ type EditableInputProps = {
 	onAddItemCallBack: (ItemValue: string) => void
 }
 
-const InputForAddItem: React.FC<EditableInputProps> = ({onAddItemCallBack}) => {
+const InputForAddItem: React.FC<EditableInputProps> = React.memo (({onAddItemCallBack}) => {
 	const [error, setError] = useState<boolean>(false)
 	const [inputText, setInputText] = useState("")
 
@@ -29,12 +29,13 @@ const InputForAddItem: React.FC<EditableInputProps> = ({onAddItemCallBack}) => {
 		if (trimStr !== "") {
 			onAddItemCallBack(trimStr)
 			setError(false)
+			setInputText("");
 		} else {
 			setError(true)
-			setInputText("");
 		}
 
 	}
+	console.log("Add item form")
 	return (
 		<>
 			<div>
@@ -56,6 +57,6 @@ const InputForAddItem: React.FC<EditableInputProps> = ({onAddItemCallBack}) => {
 
 		</>
 	);
-};
+})
 
 export default InputForAddItem;
