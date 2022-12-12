@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react"
 import axios from "axios";
-import {API} from "./API";
+import {API, TodolistType} from "./API";
 
 export default {
 	title: "API"
@@ -14,31 +14,59 @@ const settings = {
 }
 
 export const Todolist = () => {
-	const [state, setState] = useState<null | Array<object>>(null)
+	const [state, setState] = useState<null | Array<TodolistType>>(null)
 
 	useEffect(() => {
 		API.getTodolists()
-			.then((res) => setState(res.data))
+			.then((res) => {
+
+				setState(res.data)
+			})
+
 	}, [])
 
 	const deleteTodolist = (id: string) => {
 		API.deleteTodolist(id)
-			.then(() =>
-				API.getTodolists()
-					.then((res) => setState(res.data))
+			.then((res) => {
+					console.log(res)
+					API.getTodolists()
+						.then((res) => setState(res.data))
+				}
 			)
+
 	}
 	const addNewTodolist = () => {
-		API.createNewTodolist()
-			.then(() =>
-				API.getTodolists()
-					.then((res) => setState(res.data))
+		API.createNewTodolist("TEST")
+			.then((res) =>{
+					if (state !== null) {
+						API.getTasks(state[0].id)
+							.then( res => {
+								console.log("Tasks",res)
+							})
+					}
+				console.log(res)
+					API.getTodolists()
+						.then((res) => setState(res.data))
+			}
+
 			)
+	}
+	const changeTitleTodolist = () => {
+		if (state) {
+			API.updateTodolistTitle(state[0].id, "Changed").then(
+				(res) => {
+					console.log(res)
+					API.getTodolists()
+						.then((res) => setState(res.data))
+				}
+			)
+		}
 	}
 
 	return (
 		<div>
 			<button onClick={addNewTodolist}>New todolist |+|</button>
+			<button onClick={changeTitleTodolist}>Change title Todolist</button>
 			{state &&
 				state.map((el: any) => {
 					console.log(el.title)
