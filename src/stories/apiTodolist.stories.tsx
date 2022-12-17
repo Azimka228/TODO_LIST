@@ -37,18 +37,17 @@ export const Todolist = () => {
 	}
 	const addNewTodolist = () => {
 		API.createNewTodolist("TEST")
-			.then((res) =>{
+			.then((res) => {
 					if (state !== null) {
 						API.getTasks(state[0].id)
-							.then( res => {
-								console.log("Tasks",res)
+							.then(res => {
+								console.log("Tasks", res)
 							})
 					}
-				console.log(res)
+					console.log(res)
 					API.getTodolists()
 						.then((res) => setState(res.data))
-			}
-
+				}
 			)
 	}
 	const changeTitleTodolist = () => {
@@ -121,4 +120,155 @@ export const UpdateTodolistTitle = () => {
 	}, [])
 
 	return <div>{JSON.stringify(state)}</div>
+}
+
+export const GetTasks = () => {
+	const [state, setState] = useState<string>("")
+	const [todolists, setTodolists] = useState<TodolistType[]>([])
+	const [task, setTasks] = useState<Array<object>>([])
+
+	useEffect(() => {
+		API.getTodolists().then(res => setTodolists(res.data))
+	}, [])
+
+	const onClickGetTasks = () => {
+		API.getTasks(state).then(res => setTasks(res.data.items))
+	}
+
+	return (
+		<>
+			<select onChange={(e) => setState(e.currentTarget.value)}>
+				<option value="value2" selected disabled>Choose todolist</option>
+				{todolists?.map(el => {
+					return <option value={el.id}>{el.title}</option>
+				})}
+			</select>
+			<button onClick={onClickGetTasks}>GET</button>
+			<ul>
+				{task?.map((el:any) =>{
+					return <li>{el.title}</li>
+				})}
+			</ul>
+		</>
+	)
+}
+
+export const CreateTasks = () => {
+	const [state, setState] = useState<string>("")
+	const [todolists, setTodolists] = useState<TodolistType[]>([])
+	const [titleValue, setTitleValue] = useState<string>("")
+	const [tasks, setTasks] = useState<null | Array<object>>(null)
+	useEffect(() => {
+		API.getTodolists().then(res => setTodolists(res.data))
+	}, [])
+
+	const onClickCreateTask = () => {
+		API.createNewTask(state, titleValue).then(res => console.log(res.data.data.item))
+	}
+
+	return (
+		<>
+			<select onChange={(e) => setState(e.currentTarget.value)}>
+				<option value="value2" selected disabled>Choose todolist</option>
+				{todolists?.map(el => {
+					return <option value={el.id}>{el.title}</option>
+				})}
+			</select>
+			<input value={titleValue} onChange={(e) => setTitleValue(e.currentTarget.value)}/>
+			<button onClick={onClickCreateTask}>Create</button>
+		</>
+	)
+}
+
+
+export const DeleteTask = () => {
+	const [currentTodolist, setCurrentTodolist] = useState<string>("")
+	const [todolists, setTodolists] = useState<TodolistType[]>([])
+
+
+	const [currentTask, setCurrentTask] = useState<string>("")
+	const [tasks, setTasks] = useState<any>(null)
+
+	useEffect(() => {
+		API.getTodolists().then(res => setTodolists(res.data))
+	}, [])
+
+	useEffect(() => {
+		API.getTasks(currentTodolist).then(res => setTasks(res.data.items))
+	}, [currentTodolist])
+
+	const onClickDeleteTask = () => {
+		API.deleteTask(currentTodolist,currentTask)
+	}
+
+	return (
+		<>
+			<select onChange={(e) => setCurrentTodolist(e.currentTarget.value)}>
+				<option value="value2" selected disabled>Choose todolist</option>
+				{todolists?.map(el => {
+					return <option value={el.id}>{el.title}</option>
+				})}
+			</select>
+			<select onChange={(e) => setCurrentTask(e.currentTarget.value)}>
+				<option value="value2" selected disabled>Choose task</option>
+				{tasks?.map((el:any) => {
+					return <option value={el.id}>{el.title}</option>
+				})}
+			</select>
+			<button  onClick={onClickDeleteTask}>Delete</button>
+		</>
+	)
+}
+
+
+
+export const UpdateTask = () => {
+	const [currentTodolist, setCurrentTodolist] = useState<string>("")
+	const [todolists, setTodolists] = useState<TodolistType[]>([])
+
+
+	const [currentTask, setCurrentTask] = useState<string>("")
+	const [tasks, setTasks] = useState<any>(null)
+
+	const [newTitle, setNewTitle] = useState("")
+
+	useEffect(() => {
+		API.getTodolists().then(res => setTodolists(res.data))
+	}, [])
+
+	useEffect(() => {
+		API.getTasks(currentTodolist).then(res => setTasks(res.data.items))
+	}, [currentTodolist])
+
+	const onClickUpdateTitleTask = () => {
+		const newObj = {
+			title: newTitle,
+			description: "",
+			completed: true,
+			status: 1,
+			priority: 1,
+			startDate:"",
+			deadline: "",
+		}
+		API.updateTask(currentTodolist,currentTask,newObj).then(res => console.log(res.data.data.item))
+	}
+
+	return (
+		<>
+			<select onChange={(e) => setCurrentTodolist(e.currentTarget.value)}>
+				<option value="value2" selected disabled>Choose todolist</option>
+				{todolists?.map(el => {
+					return <option value={el.id}>{el.title}</option>
+				})}
+			</select>
+			<select onChange={(e) => setCurrentTask(e.currentTarget.value)}>
+				<option value="value2" selected disabled>Choose task</option>
+				{tasks?.map((el:any) => {
+					return <option value={el.id}>{el.title}</option>
+				})}
+			</select>
+			<input placeholder="new title" value={newTitle} onChange={(e) => setNewTitle(e.currentTarget.value)}/>
+			<button  onClick={onClickUpdateTitleTask}>Update</button>
+		</>
+	)
 }

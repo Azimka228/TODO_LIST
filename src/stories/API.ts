@@ -54,13 +54,13 @@ export const API = {
 		return instance.get(`/todo-lists/${todolistId}/tasks`)
 	},
 	createNewTask(todolistId: string, title: string) {
-		return instance.post(`/todo-lists/${todolistId}/tasks`, {title})
+		return instance.post<ResponseAPI<{item:TaskType}>>(`/todo-lists/${todolistId}/tasks`, {title})
 	},
 	deleteTask(todolistId: string, taskId: string) {
 		return instance.delete<ResponseAPI>(`/todo-lists/${todolistId}/tasks/${taskId}`,)
 	},
 	updateTask(todolistId: string, taskId: string, model:TaskType) {
-		return instance.put<ResponseAPI<{item:TaskType }>>(`/todo-lists/${todolistId}/tasks/${taskId}`,model)
+		return instance.put<ResponseAPI<{item:TaskType}>>(`/todo-lists/${todolistId}/tasks/${taskId}`,model)
 	},
 
 
