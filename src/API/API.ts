@@ -26,14 +26,18 @@ type ResponseAPI<D = {}> = {
 	resultCode: number
 }
 
-type TaskType = {
-	title: string
+export type TaskType = {
 	description: string
+	title: string
 	completed: boolean
 	status: number
 	priority: number
 	startDate: string
 	deadline: string
+	id: string
+	todoListId: string
+	order: number
+	addedDate: string
 }
 
 export const API = {
@@ -59,7 +63,7 @@ export const API = {
 	deleteTask(todolistId: string, taskId: string) {
 		return instance.delete<ResponseAPI>(`/todo-lists/${todolistId}/tasks/${taskId}`,)
 	},
-	updateTask(todolistId: string, taskId: string, model:TaskType) {
+	updateTask(todolistId: string, taskId: string, model: { description: string; completed: boolean; title: string; priority: number; deadline: string; startDate: string; status: number }) {
 		return instance.put<ResponseAPI<{item:TaskType}>>(`/todo-lists/${todolistId}/tasks/${taskId}`,model)
 	},
 

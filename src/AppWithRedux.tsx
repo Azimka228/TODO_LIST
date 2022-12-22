@@ -1,13 +1,15 @@
-import React, {useCallback} from "react";
+import React, {useCallback, useEffect} from "react";
 import "./App.css";
-import TodoList, {TaskType} from "./TodoList";
+
 import InputForAddItem from "./Components/InputForAddItem/InputForAddItem";
 import {AppBar, Box, Button, Container, Grid, Paper, Toolbar, Typography} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import IconButton from "@mui/material/IconButton";
-import {AddTodoListAC, ChangeTodoListTitleAC, RemoveTodoListAC} from "./state/todolists-reducer";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootState} from "./state/store";
+import {createTodolistTC, deleteTodolistTC, fetchTodolistTC, сhangeTodolistTitleTC} from "./state/todolists-reducer";
+import {useSelector} from "react-redux";
+import {AppRootState, useAppDispatch} from "./state/store";
+import {TaskType} from "./API/API";
+import TodoList from "./TodoList";
 
 export type FilterValueType = "All" | "Completed" | "Active"
 export type TodoListsType = {
@@ -19,27 +21,28 @@ export type TaskStateType = {
 	[key: string]: Array<TaskType>
 }
 
-const AppWithReducer =  () => {
+const AppWithReducer = () => {
 
-	console.log("App rendered")
-
-	const dispatch = useDispatch()
+	const dispatch = useAppDispatch()
 
 	const todoLists = useSelector<AppRootState, Array<TodoListsType>>(state => state.todolists)
 
+	useEffect(() => {
+		dispatch(fetchTodolistTC())
+	}, [])
 
-	const RenameTodoListTitle = useCallback((value: string, todoListId: string) => {
-		const action = ChangeTodoListTitleAC(value,todoListId)
-		dispatch(action)
-	},[])
-	const DeleteTodoList =  useCallback ( (todoListId: string) => {
-		const action = RemoveTodoListAC(todoListId)
-		dispatch(action)
-	},[])
-	const addNewTodoList = useCallback ((ItemValue: string) => {
-		const action = AddTodoListAC(ItemValue)
-		dispatch(action)
-	},[])
+	const RenameTodoListTitle = useCallback((title: string, todoListId: string) => {
+		const thunk = сhangeTodolistTitleTC(title, todoListId)
+		dispatch(thunk)
+	}, [])
+
+	const DeleteTodoList = useCallback((todoListId: string) => {
+		dispatch(deleteTodolistTC(todoListId))
+	}, [])
+
+	const addNewTodoList = useCallback((ItemValue: string) => {
+		dispatch(createTodolistTC(ItemValue))
+	}, [])
 
 	return (
 		<div className="App">
@@ -62,33 +65,33 @@ const AppWithReducer =  () => {
 					</Toolbar>
 				</AppBar>
 			</Box>
-				<Container fixed>
-					<Grid container sx={{p:4}}>
-						<InputForAddItem onAddItemCallBack={addNewTodoList}/>
-					</Grid>
-					<Grid container spacing={3}>
-						{
-							todoLists.map(todolist => {
+			<Container fixed>
+				<Grid container sx={{p: 4}}>
+					<InputForAddItem onAddItemCallBack={addNewTodoList}/>
+				</Grid>
+				<Grid container spacing={3}>
+					{
+						todoLists.map(todolist => {
 
-								return (
-										<Grid item>
-											<Paper sx={{p:2}}>
-												<TodoList
-													DeleteTodoList={DeleteTodoList}
-													key={todolist.id}
-													id={todolist.id}
-													title={todolist.title}
-													RenameTodoListTitle={RenameTodoListTitle}
-													Filter={todolist.filter}
-												/>
-											</Paper>
-										</Grid>
-								)
-							})
-						}
-					</Grid>
+							return (
+								<Grid item>
+									<Paper sx={{p: 2}}>
+										<TodoList
+											DeleteTodoList={DeleteTodoList}
+											key={todolist.id}
+											id={todolist.id}
+											title={todolist.title}
+											RenameTodoListTitle={RenameTodoListTitle}
+											Filter={todolist.filter}
+										/>
+									</Paper>
+								</Grid>
+							)
+						})
+					}
+				</Grid>
 
-				</Container>
+			</Container>
 
 		</div>
 	);
