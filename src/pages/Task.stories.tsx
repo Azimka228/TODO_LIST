@@ -1,7 +1,7 @@
 import React from "react";
 import {action} from "@storybook/addon-actions";
 import {Checkbox} from "@mui/material";
-import EditableSpan from "./Components/EditableSpan/EditableSpan";
+import EditableSpan from "../Components/EditableSpan/EditableSpan";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 

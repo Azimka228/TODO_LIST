@@ -1,4 +1,5 @@
 import axios from "axios";
+import {UpdateDomainTaskModelType} from "../state/tasks-reducer";
 
 const settings = {
 	withCredentials: true,
@@ -29,15 +30,38 @@ type ResponseAPI<D = {}> = {
 export type TaskType = {
 	description: string
 	title: string
-	completed: boolean
-	status: number
-	priority: number
+	status: TaskStatuses
+	priority: TaskPriorities
 	startDate: string
 	deadline: string
 	id: string
 	todoListId: string
 	order: number
 	addedDate: string
+}
+
+export type UpdateTaskModelType = {
+	title: string
+	description: string
+	status: TaskStatuses
+	priority: TaskPriorities
+	startDate: string
+	deadline: string
+}
+
+export enum TaskStatuses {
+	New = 0,
+	InProgress = 1,
+	Completed = 2,
+	Draft = 3
+}
+
+export enum TaskPriorities {
+	Low = 0,
+	Middle = 1,
+	Hi = 2,
+	Urgently = 3,
+	Later = 4
 }
 
 export const API = {
@@ -58,14 +82,13 @@ export const API = {
 		return instance.get(`/todo-lists/${todolistId}/tasks`)
 	},
 	createNewTask(todolistId: string, title: string) {
-		return instance.post<ResponseAPI<{item:TaskType}>>(`/todo-lists/${todolistId}/tasks`, {title})
+		return instance.post<ResponseAPI<{ item: TaskType }>>(`/todo-lists/${todolistId}/tasks`, {title})
 	},
 	deleteTask(todolistId: string, taskId: string) {
 		return instance.delete<ResponseAPI>(`/todo-lists/${todolistId}/tasks/${taskId}`,)
 	},
-	updateTask(todolistId: string, taskId: string, model: { description: string; completed: boolean; title: string; priority: number; deadline: string; startDate: string; status: number }) {
-		return instance.put<ResponseAPI<{item:TaskType}>>(`/todo-lists/${todolistId}/tasks/${taskId}`,model)
+	updateTask(todolistId: string, taskId: string, model: UpdateDomainTaskModelType) {
+		return instance.put<ResponseAPI<{ item: TaskType }>>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
 	},
-
 
 }

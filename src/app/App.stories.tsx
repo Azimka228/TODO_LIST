@@ -1,6 +1,6 @@
-import AppWithRedux from "./AppWithRedux";
+import AppWithRedux from "../pages/TodolistMainPage";
 import {Provider} from "react-redux";
-import {store} from "./state/store";
+import {store} from "../state/store";
 import React from "react";
 
 export default {

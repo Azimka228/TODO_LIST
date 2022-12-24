@@ -1,14 +1,14 @@
 import React, {useCallback, useEffect} from "react";
-import "./App.css";
+import "../app/App.css";
 
-import InputForAddItem from "./Components/InputForAddItem/InputForAddItem";
+import InputForAddItem from "../Components/InputForAddItem/InputForAddItem";
 import {AppBar, Box, Button, Container, Grid, Paper, Toolbar, Typography} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import IconButton from "@mui/material/IconButton";
-import {createTodolistTC, deleteTodolistTC, fetchTodolistTC, сhangeTodolistTitleTC} from "./state/todolists-reducer";
+import {createTodolistTC, deleteTodolistTC, fetchTodolistTC, сhangeTodolistTitleTC} from "../state/todolists-reducer";
 import {useSelector} from "react-redux";
-import {AppRootState, useAppDispatch} from "./state/store";
-import {TaskType} from "./API/API";
+import {AppRootStateType, useAppDispatch} from "../state/store";
+import {TaskType} from "../API/API";
 import TodoList from "./TodoList";
 
 export type FilterValueType = "All" | "Completed" | "Active"
@@ -25,7 +25,7 @@ const AppWithReducer = () => {
 
 	const dispatch = useAppDispatch()
 
-	const todoLists = useSelector<AppRootState, Array<TodoListsType>>(state => state.todolists)
+	const todoLists = useSelector<AppRootStateType, Array<TodoListsType>>(state => state.todolists)
 
 	useEffect(() => {
 		dispatch(fetchTodolistTC())

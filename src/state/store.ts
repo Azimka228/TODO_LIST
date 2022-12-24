@@ -11,12 +11,12 @@ const rootReducer = combineReducers(
 	}
 )
 
-export type AppRootState = ReturnType<typeof rootReducer>
+export type AppRootStateType = ReturnType<typeof rootReducer>
 
-export const useAppDispatch: () => ThunkDispatch<AppRootState, any, AnyAction> = useDispatch
+export const useAppDispatch: () => ThunkDispatch<AppRootStateType, any, AnyAction> = useDispatch
 
 export const store = createStore(rootReducer ,applyMiddleware(thunk))
 
 export type AppActionsType = TodolistsActionsType | TasksActionsType
 
-export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppRootState, unknown, AppActionsType>
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, AppActionsType>
