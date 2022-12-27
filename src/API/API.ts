@@ -1,5 +1,6 @@
 import axios from "axios";
 import {UpdateDomainTaskModelType} from "../state/tasks-reducer";
+import {RequestStatusType} from "../state/app-reducer";
 
 const settings = {
 	withCredentials: true,
@@ -28,6 +29,7 @@ type ResponseAPI<D = {}> = {
 }
 
 export type TaskType = {
+	taskStatus: RequestStatusType
 	description: string
 	title: string
 	status: TaskStatuses
@@ -64,7 +66,7 @@ export enum TaskPriorities {
 	Later = 4
 }
 
-export const API = {
+export const todolistAPI = {
 	getTodolists() {
 		return instance.get<Array<TodolistType>>(`/todo-lists`)
 	},
@@ -91,4 +93,23 @@ export const API = {
 		return instance.put<ResponseAPI<{ item: TaskType }>>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
 	},
 
+}
+
+export type UserType = {
+	email: string
+	password: string
+	rememberMe: boolean
+	captcha?: string
+}
+
+export const authAPI = {
+	loginUser(user: UserType) {
+		return instance.post<ResponseAPI<{ userId?: number }>>(`/auth/login`, user)
+	},
+	logoutUser(){
+		return instance.delete<ResponseAPI>(`/auth/login`)
+	},
+	me(){
+		return instance.get<ResponseAPI>(`/auth/me`)
+	}
 }
