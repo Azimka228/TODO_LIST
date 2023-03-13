@@ -33,8 +33,6 @@ const TodoList = React.memo((props: TodoListPropsType) => {
 	const dispatch = useAppDispatch()
 
 	const currentTask = todolist.filter(el => el.id === props.id)[0]
-	console.log(currentTask)
-	console.log("Таски",tasks)
 
 	useEffect(() => {
 		dispatch(fetchTasksTC(props.id))

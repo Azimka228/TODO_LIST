@@ -9,23 +9,25 @@ const initialState = {
 }
 
 export type InitialUserStateType = {
-	id: number | null
-	login: string | null
-	email: string | null
+	id?: number | null
+	login?: string | null
+	email?: string | null
 }
 
 export const userReducer = (state: InitialUserStateType = initialState, action: UserReducerActionsType): InitialUserStateType => {
 	switch (action.type) {
-
+		case "SET-USER": {
+			return {...state, ...action.user}
+		}
 		default:
 			return state
 	}
 }
 
 export type UserReducerActionsType =
-| ReturnType<typeof setUserAC>
+	| ReturnType<typeof setUserAC>
 
-	export const setUserAC = (user:InitialUserStateType) => ({type: "SET-USER",user })
+export const setUserAC = (user: InitialUserStateType) => ({type: "SET-USER", user})
 
 //THUNK CREATORS
 export const userLoginTC = (user: UserType): AppThunk => (dispatch) => {
@@ -34,15 +36,38 @@ export const userLoginTC = (user: UserType): AppThunk => (dispatch) => {
 		.then(res => {
 				if (res.data.resultCode === 0) {
 					console.log(res.data.data)
+					dispatch(setUserAC({id: res.data.data.userId}))
 					dispatch(setStatusAC("succeeded"))
 				} else {
 					if (res.data.messages.length) {
 						dispatch(setErrorAC(res.data.messages[0]))
 						dispatch(setStatusAC("failed"))
 					}
-
 				}
+			}
+		)
+		.catch((error) => {
+			dispatch(setErrorAC(error.message))
+		})
+}
+export const userLogoutTC = (): AppThunk => (dispatch) => {
+	dispatch(setStatusAC("loading"))
+	authAPI.logoutUser()
+		.then(res => {
+				if (res.data.resultCode === 0) {
+					dispatch(setUserAC({
+						id: null,
+						login: null,
+						email: null
+					}))
 
+					dispatch(setStatusAC("succeeded"))
+				} else {
+					if (res.data.messages.length) {
+						dispatch(setErrorAC(res.data.messages[0]))
+						dispatch(setStatusAC("failed"))
+					}
+				}
 			}
 		)
 		.catch((error) => {

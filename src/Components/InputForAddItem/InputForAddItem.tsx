@@ -35,7 +35,7 @@ const InputForAddItem: React.FC<EditableInputProps> = React.memo (({onAddItemCal
 		}
 
 	}
-	console.log("Add item form")
+
 	return (
 		<>
 			<div>

@@ -117,7 +117,6 @@ export const fetchTasksTC = (todolistId: string): AppThunk => (dispatch) => {
 	todolistAPI.getTasks(todolistId)
 		.then(res => {
 				dispatch(setTasksAC(res.data.items, todolistId))
-				console.log("Tasks", res.data.items)
 				dispatch(setStatusAC("succeeded"))
 			}
 		)

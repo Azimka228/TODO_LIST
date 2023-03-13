@@ -8,22 +8,31 @@ import MenuIcon from "@mui/icons-material/Menu";
 import {useSelector} from "react-redux";
 import {AppRootStateType, useAppDispatch} from "../state/store";
 import {initializedAppTC, RequestStatusType} from "../state/app-reducer";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import {InitialUserStateType, userLogoutTC} from "../pages/User/login-reducer";
 
 const App = () => {
+	const appStatus = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
+	const appState = useSelector<AppRootStateType>(state => state.todolists)
+	const appState2 = useSelector<AppRootStateType>(state => state.tasks)
+	const isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.initialized)
+	const isLoggedIn = useSelector<AppRootStateType, InitialUserStateType>(state => state.user)
 
+
+	console.log(appState)
+	console.log(appState2)
 	const dispatch = useAppDispatch()
 	useEffect(() => {
 		dispatch(initializedAppTC())
-	}, [])
-
-	const appStatus = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
-	const isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.initialized)
+	}, [isLoggedIn.id])
 
 	if (!isInitialized) {
 		return <div>
 			<CircularProgress/>
 		</div>
+	}
+	const logoutUser = () => {
+		dispatch(userLogoutTC())
 	}
 
 	return <>
@@ -46,13 +55,35 @@ const App = () => {
 							<Typography variant="h6" component="div" sx={{flexGrow: 1}}>
 								News
 							</Typography>
-							<Button color="inherit">Login</Button>
+							{/*TODO!!!*/}
+							{isLoggedIn.id !== null ?
+								<>
+									<Button color="inherit">Profile</Button>
+									<Button color="inherit" onClick={logoutUser}>Logout</Button>
+								</>
+
+								:
+								<>
+									<Button color="inherit">Login</Button>
+								</>
+							}
+
 						</Toolbar>
 					</AppBar>
 				</Box>
 				<Routes>
-					<Route path="/" element={<TodolistMainPage/>}></Route>
-					<Route path="/login" element={<Login/>}></Route>
+					{isLoggedIn.id !== null ?
+						<>
+							<Route path="/" element={<TodolistMainPage/>}></Route>
+							<Route path="*" element={<Navigate replace to="/"/>}></Route>
+						</>
+
+						:
+						<>
+							<Route path="/login" element={<Login/>}></Route>
+							<Route path="*" element={<Navigate replace to="/login"/>}></Route>
+						</>
+					}
 				</Routes>
 			</div>
 		</BrowserRouter>

@@ -11,8 +11,6 @@ import {useFormik} from "formik";
 import {useAppDispatch} from "../../state/store";
 import {userLoginTC} from "./login-reducer";
 
-
-
 export const Login = () => {
 
 	const dispatch = useAppDispatch()
@@ -65,12 +63,15 @@ export const Login = () => {
 							onChange={formik.handleChange}
 							value={formik.values.rememberMe}
 						/>
-						<Button type={"submit"} variant={"contained"} color={"primary"} >
+						<Button type={"submit"} variant={"contained"} color={"primary"}>
 							Login
 						</Button>
 					</FormGroup>
 				</FormControl>
 			</form>
 		</Grid>
+		<div>
+
+		</div>
 	</Grid>
 }
